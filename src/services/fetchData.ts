@@ -1,3 +1,7 @@
+import config from '../config';
+
+const { inDev, backendUrl } = config;
+
 /**
  * A fancy Fetch abstraction for DRY principles
  * @param endpoint The endpoint on the backend the fetch is ran against
@@ -8,16 +12,14 @@
  */
 export default async function fancyFetch(options: {
   endpoint: string;
-  method: "GET" | "POST" | "PUT" | "DELETE";
+  method: 'GET' | 'POST' | 'PUT' | 'DELETE';
   data?: object;
   token?: string;
 }) {
   const { endpoint, method, data, token } = options;
-  const inDev = import.meta.env.VITE_ENVIRONMENT === "dev";
 
-  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
-  const API_VERSION = "/api/v1";
-  const url = BACKEND_URL + API_VERSION + endpoint;
+  const API_VERSION = '/api/v1';
+  const url = backendUrl + API_VERSION + endpoint;
 
   if (!inDev) {
     try {
@@ -25,17 +27,17 @@ export default async function fancyFetch(options: {
         token !== undefined
           ? {
               Authorization: `Bearer ${token}`,
-              "Access-Control-Allow-Origin": "*",
-              "Access-Control-Allow-Headers":
-                "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization",
-              "Access-Control-Allow-Methods":
-                "GET, POST, PUT, DELETE, PATCH, OPTIONS",
-              "Content-Type": "application/json",
-              Accept: "application/json",
+              'Access-Control-Allow-Origin': '*',
+              'Access-Control-Allow-Headers':
+                'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization',
+              'Access-Control-Allow-Methods':
+                'GET, POST, PUT, DELETE, PATCH, OPTIONS',
+              'Content-Type': 'application/json',
+              Accept: 'application/json',
             }
           : {
-              "Content-Type": "application/json",
-              Accept: "application/json",
+              'Content-Type': 'application/json',
+              Accept: 'application/json',
             };
       const res: any = await fetch(url, {
         method,
@@ -49,7 +51,7 @@ export default async function fancyFetch(options: {
 
       return await res.json();
     } catch (err) {
-      console.error("Error fetching data:", err);
+      console.error('Error fetching data:', err);
     }
   } else {
     const res = await fetch(url, { method, body: JSON.stringify(data) });
