@@ -1,6 +1,7 @@
 #This is very messy due to haste in last semester...
 version: '3.8'
 services:
+  # From here to the following comment
   db:
     container_name: db_c
     image: evandvance/bekindlytodaydatabase
@@ -16,9 +17,12 @@ services:
     environment:
       - DATABASE_URL=${DATABASE_URL}
       - PORT=${BACKEND_PORT}
-      - ENVIRONMENT=${ENVIRONMENT}
+      - ENVIRONMENT=${VITE_NODE_ENV}
     ports:
       - ${BACKEND_PORT}:${BACKEND_PORT}
+
+  # Here Is not relevant for deploy and is only relevant for dev.
+  # If we have issues with it while developing, we can revisit it.
   frontend:
     depends_on:
       - api
@@ -32,11 +36,9 @@ services:
     environment:
       - FRONTEND_PORT=${FRONTEND_PORT}
       - VITE_BACKEND_URL=${VITE_BACKEND_URL}
-      - VITE_ENVIRONMENT=${VITE_ENVIRONMENT}
-      - VITE_KINDE_FRONTEND_CLIENT_ID=${VITE_KINDE_FRONTEND_CLIENT_ID}
-      - VITE_KINDE_DOMAIN=${VITE_KINDE_DOMAIN}
-      - VITE_KINDE_REDIRECT_URL=${VITE_KINDE_REDIRECT_URL}
-      - VITE_KINDE_LOGOUT_URL=${VITE_KINDE_LOGOUT_URL}
+      - VITE_NODE_ENV=development
+      - VITE_CLIENT_ID=${VITE_CLIENT_ID}
+      - VITE_DOMAIN=${VITE_DOMAIN}
     develop:
       watch:
         - path: ./package.json
