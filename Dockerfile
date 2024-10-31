@@ -34,7 +34,7 @@ COPY --from=builder /app .
 CMD [ "npm", "run", "preview" ]
 
 FROM base as dev
-ENV VITE_ENVIROMENT=dev
+ENV VITE_NODE_ENV=development
 ENV VITE_BACKEND_URL=${BACKEND_URL}
 ENV VITE_DOMAIN=https://localhost:${FRONTEND_PORT}
 
