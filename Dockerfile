@@ -1,4 +1,4 @@
-FROM node:21-alpine as base
+FROM node:21-alpine AS base
 WORKDIR /app
 COPY ./package*.json .
 
@@ -6,7 +6,10 @@ ENV FRONTEND_PORT=${FRONTEND_PORT}
 ENV VITE_KINDE_CLIENT_ID=${VITE_CLIENT_ID}
 EXPOSE ${FRONTEND_PORT}
 
-FROM base as builder
+FROM base AS builder
+ENV VITE_BACKEND_URL=${VITE_BACKEND_URL}
+ENV VITE_DOMAIN=${VITE_DOMAIN}
+ENV VITE_NODE_ENV='production'
 
 RUN npm ci
 
@@ -14,27 +17,16 @@ COPY . .
 RUN npm run build
 
 
-FROM base as prod
+FROM nginx:alpine AS prod
 
-ENV VITE_BACKEND_URL=${VITE_BACKEND_URL}
-ENV VITE_DOMAIN=${VITE_DOMAIN}
-ENV VITE_NODE_ENV='production'
+COPY --from=builder /app/dist /usr/share/nginx/html
 
-RUN addgroup react && adduser -S -G react react
+EXPOSE 80
 
-USER react
+CMD [ "nginx", "-g", "daemon off;" ]
 
-USER root
-RUN chown -R react:react . 
-
-USER react
-
-COPY --from=builder /app .
-
-CMD [ "npm", "run", "preview" ]
-
-FROM base as dev
-ENV VITE_ENVIROMENT=dev
+FROM base AS dev
+ENV VITE_NODE_ENV=development
 ENV VITE_BACKEND_URL=${BACKEND_URL}
 ENV VITE_DOMAIN=https://localhost:${FRONTEND_PORT}
 
