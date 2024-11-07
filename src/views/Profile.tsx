@@ -4,37 +4,22 @@ import "daisyui/dist/full.css";
 import "../index.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import { BiMessageSquareEdit } from "react-icons/bi";
 import { useKindeAuth } from "@kinde-oss/kinde-auth-react";
-import Carousel from "../components/Carousel";
-import {
-  getLoggedInUser,
-  updateUserProfilePicture,
-  User,
-  getUserStats,
-} from "../services";
+import { getLoggedInUser, User, getUserStats } from "../services";
 import { useNavigate } from "react-router-dom";
-
-export interface ProfilePicture {
-  name: string;
-  path: string;
-}
+import fancyFetch from "../services/fetchData";
 
 function Profile() {
   const { logout, isAuthenticated, isLoading, getToken } = useKindeAuth();
-  const [profilePictureClicked, setProfilePictureClicked] =
-    useState<boolean>(false);
   const [selectedProfilePicture, setSelectedProfilePicture] = useState<
     string | undefined
   >();
-
   const [backendUser, setBackendUser] = useState<User | undefined>();
   const [savedToken, setSavedToken] = useState<string | undefined>();
   const [userCompletionsCount, setUserCompletionsCount] = useState<
     number | undefined
   >();
   const [userStreak, setUserStreak] = useState<number | undefined>();
-
   const [showLogin, setShowLogin] = useState(true);
 
   const navigate = useNavigate();
@@ -45,12 +30,12 @@ function Profile() {
       getToken().then((token) => {
         if (token !== undefined) {
           setSavedToken(token);
-          getLoggedInUser(token).then((user) => {
+          fancyFetch({ endpoint: "/users/me", method: "GET", token }).then((user) => {
             setBackendUser(user);
             if (user.profilePicture !== null)
               setSelectedProfilePicture(user.profilePicture);
           });
-          getUserStats(token).then((stats) => {
+          fancyFetch({ endpoint: "/users/stats", method: "GET", token }).then((stats) => {
             setUserCompletionsCount(stats.user_completions_count);
             setUserStreak(stats.user_streak);
           });
@@ -59,28 +44,37 @@ function Profile() {
     } else if (!isLoading) {
       navigate("/");
     }
-  }, [isLoading]);
+  }, [isLoading, isAuthenticated, getToken, navigate]);
 
-  const profilePictures: ProfilePicture[] = [
-    { name: "Blue Profile", path: "images/Blue_Profile.png" },
-    { name: "Red Profile", path: "images/Red_Profile.png" },
-    { name: "Green Profile", path: "images/Green_Profile.png" },
-    { name: "Pink Profile", path: "images/Pink_Profile.png" },
-    { name: "Yellow Profile", path: "images/Yellow_Profile.png" },
-    { name: "Purple Profile", path: "images/Purple_Profile.png" },
-  ];
+  const handleProfilePictureUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file && savedToken) {
+      if (!file.type.startsWith("image/")) {
+        alert("Please upload a valid image file.");
+        return;
+      }
 
-  const handleProfilePictureClick = () => {
-    setProfilePictureClicked(!profilePictureClicked);
-  };
+      const formData = new FormData();
+      formData.append("profilePicture", file);
 
-  const handleProfilePictureChange = (profilePicture: string) => {
-    if (savedToken) {
-      updateUserProfilePicture(profilePicture, savedToken);
+      try {
+        const response = await fancyFetch({
+          endpoint: "/users/profilepicture",
+          method: "POST",
+          data: formData,
+          token: savedToken,
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to upload profile picture");
+        }
+
+        const data = await response.json();
+        setSelectedProfilePicture(data.profilePictureUrl);
+      } catch (error) {
+        console.error("Error uploading profile picture", error);
+      }
     }
-    setSelectedProfilePicture(profilePicture);
-
-    setProfilePictureClicked(false); // Reset profilePictureClicked state after selecting new profile picture
   };
 
   return (
@@ -88,31 +82,29 @@ function Profile() {
       <Navbar showLogin={showLogin} />
 
       <div className="profile-picture-container min-h-[260px] min-w-px max-w-full justify-between mt-6 flex flex-col items-center relative">
-        <div
-          className="profile-picture bg-blue-500 rounded-full w-30 h-30 flex items-center justify-center mb-4 relative"
-          onClick={handleProfilePictureClick}
-        >
+        <div className="profile-picture bg-blue-500 rounded-full w-30 h-30 flex items-center justify-center mb-4 relative">
           {!showLogin ? (
-            <>
-              <img
-                src={selectedProfilePicture}
-                alt="Profile"
-                className="rounded-full w-full h-full cursor-pointer"
-                style={{ maxWidth: "200px", maxHeight: "200px" }} // Set max width and max height
-              />
-              <BiMessageSquareEdit className="absolute bottom-1 right-1 text-white bg-gray-800 rounded-full p-1 cursor-pointer" />
-            </>
+            <img
+              src={selectedProfilePicture}
+              alt="Profile"
+              className="rounded-full w-full h-full cursor-pointer"
+              style={{ maxWidth: "200px", maxHeight: "200px" }}
+            />
           ) : (
             <div className="h-[200px] aspect-square"></div>
           )}
         </div>
 
-        {profilePictureClicked && (
-          <Carousel
-            profilePictures={profilePictures}
-            onProfilePictureChange={handleProfilePictureChange}
+        {/* Button for profile picture upload */}
+        <label className="btn text-white bg-blue-500 border-hidden mt-4 cursor-pointer">
+          Update Profile Picture
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleProfilePictureUpload}
+            className="hidden"
           />
-        )}
+        </label>
 
         <div className="text-center mt-4">
           <h2 className="text-xl font-semibold text-black">
@@ -125,9 +117,7 @@ function Profile() {
         <div className="stats shadow bg-white">
           <div className="stat w-40 space-y-2">
             <div className="stat-value text-black pt-2">
-              {userCompletionsCount !== undefined
-                ? userCompletionsCount
-                : "..."}
+              {userCompletionsCount !== undefined ? userCompletionsCount : "..."}
             </div>
             <div className="stat-title text-black whitespace-normal">
               Challenges Completed
