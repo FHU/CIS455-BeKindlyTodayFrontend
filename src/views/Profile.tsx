@@ -42,7 +42,7 @@ function Profile() {
   useEffect(() => {
     if (isAuthenticated) {
       setShowLogin(false);
-      getToken().then((token) => {
+      getToken!().then((token) => {
         if (token !== undefined) {
           setSavedToken(token);
           getLoggedInUser(token).then((user) => {
