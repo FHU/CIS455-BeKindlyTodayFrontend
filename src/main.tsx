@@ -5,10 +5,9 @@ import './index.css';
 import config from './config.ts';
 import { KindeProvider } from '@kinde-oss/kinde-auth-react';
 
+const { inDev, clientId, domain } = config;
 
-const { clientId, domain } = config;
-
-// if (!inDev) {
+if (!inDev) {
   ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
       <KindeProvider
@@ -21,10 +20,10 @@ const { clientId, domain } = config;
       </KindeProvider>
     </React.StrictMode>
   );
-// } else {
-//   ReactDOM.createRoot(document.getElementById('root')!).render(
-//     <React.StrictMode>
-//       <App />
-//     </React.StrictMode>
-//   );
-// }
+} else {
+  ReactDOM.createRoot(document.getElementById('root')!).render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  );
+}

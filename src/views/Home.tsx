@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
-import Navbar from "../components/Navbar";
-import Stats from "../components/Stats";
-import Footer from "../components/Footer";
-import CountdownTimer from "../components/Timer";
-import Card from "../components/Card";
-import Feed from "../components/Feed";
+import React, { useState, useEffect } from 'react';
+import Navbar from '../components/Navbar';
+import Stats from '../components/Stats';
+import Footer from '../components/Footer';
+import CountdownTimer from '../components/Timer';
+import Card from '../components/Card';
+import Feed from '../components/Feed';
 import {
   getTodaysCompletion,
   getAllCompletionsToday,
@@ -19,12 +19,12 @@ import {
   updateUsername,
   updateUserProfilePicture,
   User,
-} from "../services";
-import { useKindeAuth } from "@kinde-oss/kinde-auth-react";
+} from '../services';
+import { useKindeAuth } from '@kinde-oss/kinde-auth-react';
 
 const Home: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<
-    "home" | "completion" | "confirmation"
+    'home' | 'completion' | 'confirmation'
   >();
   const [completionStats, setCompletionStats] = useState<
     CompletionStats | undefined
@@ -55,7 +55,7 @@ const Home: React.FC = () => {
               const kindeUser = getUser();
               if (user.username === null) {
                 const username = `${kindeUser.given_name}.${kindeUser.family_name}`;
-                const profilePicture = "images/Blue_Profile.png";
+                const profilePicture = 'images/Blue_Profile.png';
                 updateUsername(username, token);
                 updateUserProfilePicture(profilePicture, token);
               }
@@ -81,14 +81,14 @@ const Home: React.FC = () => {
 
   // Update current page based on completedChallenge
   useEffect(() => {
-    const page = completion !== null ? "confirmation" : "home";
+    const page = completion !== null ? 'confirmation' : 'home';
     setCurrentPage(page);
   }, [completion]);
 
   const handleOnClick = (description?: string) => {
-    if (currentPage === "home") {
-      setCurrentPage("completion");
-    } else if (currentPage === "completion") {
+    if (currentPage === 'home') {
+      setCurrentPage('completion');
+    } else if (currentPage === 'completion') {
       if (savedToken !== undefined) {
         if (description !== undefined) {
           makeNewCompletion(description, savedToken).then(
@@ -126,9 +126,7 @@ const Home: React.FC = () => {
         <CountdownTimer />
         <div className="mx-auto w-fit ">
           <h2 className="text-2xl sm:text-3xl py-3 rounded-t-xl text-white sm:w-96 w-80 text-center font-extrabold bg-kindly-blue ">
-            {completion 
-              ? "Completed Challenge"
-              : "Today's Challenge"}
+            {completion ? 'Completed Challenge' : "Today's Challenge"}
           </h2>
           <div className="card rounded-t-none">
             <Card
@@ -142,11 +140,11 @@ const Home: React.FC = () => {
       </div>
       <div
         className={
-          "bg-kindly-offWhite text-black " +
-          (currentPage !== "confirmation" ? "hidden" : "")
+          'bg-kindly-offWhite text-black ' +
+          (currentPage !== 'confirmation' ? 'hidden' : '')
         }
       >
-        {currentPage === "confirmation" &&
+        {currentPage === 'confirmation' &&
           todaysCompletions
             .filter(
               (completion_user) => completion_user.user_id !== backendUser?.id

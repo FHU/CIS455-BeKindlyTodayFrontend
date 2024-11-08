@@ -1,14 +1,13 @@
 import { Link } from 'react-router-dom';
 import { BsCalendar4, BsPersonCircle } from 'react-icons/bs';
 import { useKindeAuth } from '@kinde-oss/kinde-auth-react';
+import inDev from '../config';
 
 interface Props {
   showLogin: boolean;
 }
 
 const Navbar = ({ showLogin }: Props) => {
-  const inDev = import.meta.env.VITE_ENVIRONMENT === 'dev';
-
   const { login, register } = useKindeAuth();
 
   return (
@@ -29,7 +28,7 @@ const Navbar = ({ showLogin }: Props) => {
         <Link to="/home">BeKindly</Link>
       </h1>
       <div className="flex justify-end items-center">
-        {inDev || !showLogin ? (
+        {!inDev || !showLogin ? (
           <div>
             <Link to="/calendar" data-testid="calendar-link">
               <div className="btn shadow-none sm:px-2 px-1 text-3xl sm:text-5xl text-white bg-transparent border-hidden hover:bg-transparent hover:opacity-75">
