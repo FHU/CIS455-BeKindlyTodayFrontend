@@ -1,19 +1,19 @@
 // Profile.tsx
-import { useEffect, useState } from "react";
-import "daisyui/dist/full.css";
-import "../index.css";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
-import { BiMessageSquareEdit } from "react-icons/bi";
-import { useKindeAuth } from "@kinde-oss/kinde-auth-react";
-import Carousel from "../components/Carousel";
+import { useEffect, useState } from 'react';
+import 'daisyui/dist/full.css';
+import '../index.css';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
+import { BiMessageSquareEdit } from 'react-icons/bi';
+import { useKindeAuth } from '@kinde-oss/kinde-auth-react';
+import Carousel from '../components/Carousel';
 import {
   getLoggedInUser,
   updateUserProfilePicture,
   User,
   getUserStats,
-} from "../services";
-import { useNavigate } from "react-router-dom";
+} from '../services';
+import { useNavigate } from 'react-router-dom';
 
 export interface ProfilePicture {
   name: string;
@@ -57,17 +57,17 @@ function Profile() {
         }
       });
     } else if (!isLoading) {
-      navigate("/");
+      navigate('/');
     }
   }, [isLoading]);
 
   const profilePictures: ProfilePicture[] = [
-    { name: "Blue Profile", path: "images/Blue_Profile.png" },
-    { name: "Red Profile", path: "images/Red_Profile.png" },
-    { name: "Green Profile", path: "images/Green_Profile.png" },
-    { name: "Pink Profile", path: "images/Pink_Profile.png" },
-    { name: "Yellow Profile", path: "images/Yellow_Profile.png" },
-    { name: "Purple Profile", path: "images/Purple_Profile.png" },
+    { name: 'Blue Profile', path: 'images/Blue_Profile.png' },
+    { name: 'Red Profile', path: 'images/Red_Profile.png' },
+    { name: 'Green Profile', path: 'images/Green_Profile.png' },
+    { name: 'Pink Profile', path: 'images/Pink_Profile.png' },
+    { name: 'Yellow Profile', path: 'images/Yellow_Profile.png' },
+    { name: 'Purple Profile', path: 'images/Purple_Profile.png' },
   ];
 
   const handleProfilePictureClick = () => {
@@ -98,7 +98,7 @@ function Profile() {
                 src={selectedProfilePicture}
                 alt="Profile"
                 className="rounded-full w-full h-full cursor-pointer"
-                style={{ maxWidth: "200px", maxHeight: "200px" }} // Set max width and max height
+                style={{ maxWidth: '200px', maxHeight: '200px' }} // Set max width and max height
               />
               <BiMessageSquareEdit className="absolute bottom-1 right-1 text-white bg-gray-800 rounded-full p-1 cursor-pointer" />
             </>
@@ -116,7 +116,7 @@ function Profile() {
 
         <div className="text-center mt-4">
           <h2 className="text-xl font-semibold text-black">
-            {backendUser ? backendUser.username : "Loading Username . . ."}
+            {backendUser ? backendUser.username : 'Loading Username . . .'}
           </h2>
         </div>
       </div>
@@ -127,7 +127,7 @@ function Profile() {
             <div className="stat-value text-black pt-2">
               {userCompletionsCount !== undefined
                 ? userCompletionsCount
-                : "..."}
+                : '...'}
             </div>
             <div className="stat-title text-black whitespace-normal">
               Challenges Completed
@@ -138,7 +138,7 @@ function Profile() {
         <div className="stats shadow bg-white">
           <div className="stat w-40 space-y-2">
             <div className="stat-value text-black pt-2">
-              {userStreak !== undefined ? userStreak : "..."}
+              {userStreak !== undefined ? userStreak : '...'}
             </div>
             <div className="stat-title text-black whitespace-normal">
               Current Streak

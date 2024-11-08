@@ -1,26 +1,26 @@
-import { useEffect, useState } from "react";
-import "./Calendar.css";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
-import { getCalendarInfo } from "../services";
-import { useKindeAuth } from "@kinde-oss/kinde-auth-react";
-import { useNavigate } from "react-router-dom";
-import { BsFire } from "react-icons/bs";
+import { useEffect, useState } from 'react';
+import './Calendar.css';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
+import { getCalendarInfo } from '../services';
+import { useKindeAuth } from '@kinde-oss/kinde-auth-react';
+import { useNavigate } from 'react-router-dom';
+import { BsFire } from 'react-icons/bs';
 
-const daysOfWeek = ["S", "M", "T", "W", "T", "F", "S"];
+const daysOfWeek = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 const monthNames = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
 ];
 
 const MonthName = ({
@@ -63,16 +63,16 @@ const Calendar = ({
           key={`empty-${index}`}
           className="text-center text-xl text-gray-400"
         >
-          -{" "}
+          -{' '}
           {/* Placeholder for empty grid items before the first day of the month */}
         </div>
       ))}
       {[...Array(daysInMonth[month])].map((_, index) => {
         const dayOfMonth = index + 1;
-        let dayStyle = "day-number"; // Base styling for day numbers
+        let dayStyle = 'day-number'; // Base styling for day numbers
 
         if (completedDays.includes(dayOfMonth)) {
-          dayStyle += " special-day streak-highlight"; // Additional styling for special days
+          dayStyle += ' special-day streak-highlight'; // Additional styling for special days
         }
 
         if (
@@ -80,7 +80,7 @@ const Calendar = ({
           month === currentMonth &&
           year === currentYear
         ) {
-          dayStyle += " current-day"; // Applying current-day style
+          dayStyle += ' current-day'; // Applying current-day style
         }
 
         return (
@@ -134,7 +134,7 @@ const CalendarPage = () => {
         }
       });
     } else if (!isLoading) {
-      navigate("/");
+      navigate('/');
     }
   }, [isLoading, isAuthenticated, navigate, getToken]);
 
@@ -159,7 +159,7 @@ const CalendarPage = () => {
   const streakTitle = (
     <div
       className="streak-title text-center rounded-xl text-white bg-gradient-to-br from-kindly-royalBlue to-kindly-lightBlue shadow-md max-w-screen-sm mx-auto"
-      style={{ maxWidth: "800px" }}
+      style={{ maxWidth: '800px' }}
     >
       <div className="flex flex-row">
         <div className="flex flex-col pr-2">
@@ -207,13 +207,13 @@ const CalendarPage = () => {
         <button
           onClick={goToPreviousMonth}
           className="carousel-control left-control larger-button text-kindly-blue"
-          style={{ marginRight: "8px" }}
+          style={{ marginRight: '8px' }}
         >
-          {"<"}
+          {'<'}
         </button>
         <div
           className="carousel w-full flex justify-center rounded-t-xl items-center"
-          style={{ maxWidth: "800px" }}
+          style={{ maxWidth: '800px' }}
         >
           <div className="carousel-item rounded-t-xl flex flex-col justify-center max-w-fit">
             <div className="monthName w-full h-full rounded-full -mb-4">
@@ -244,13 +244,13 @@ const CalendarPage = () => {
         <button
           onClick={goToNextMonth}
           className="carousel-control right-control larger-button text-kindly-blue"
-          style={{ marginLeft: "8px" }}
+          style={{ marginLeft: '8px' }}
         >
-          {">"}
+          {'>'}
         </button>
       </div>
       <div
-        style={{ maxWidth: "100px", width: "100%", marginBottom: "-20px" }}
+        style={{ maxWidth: '100px', width: '100%', marginBottom: '-20px' }}
         className="mx-auto"
       >
         <button
@@ -260,7 +260,7 @@ const CalendarPage = () => {
             currentMonth === new Date().getMonth() &&
             currentYear === new Date().getFullYear()
           }
-          style={{ width: "100%" }}
+          style={{ width: '100%' }}
         >
           Today
         </button>
