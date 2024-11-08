@@ -122,7 +122,7 @@ const CalendarPage = () => {
   useEffect(() => {
     if (isAuthenticated) {
       setShowLogin(false);
-      getToken().then((token) => {
+      getToken!().then((token) => {
         if (token !== undefined) {
           getCalendarInfo(token).then((info) => {
             const dates = info.completion_dates.map(

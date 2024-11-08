@@ -48,7 +48,7 @@ const Home: React.FC = () => {
     getTodaysChallenge().then((challenge) => setChallenge(challenge));
     if (isAuthenticated) {
       setShowLogin(false);
-      getToken().then((token): void => {
+      getToken!().then((token): void => {
         if (token !== undefined) {
           if (backendUser === undefined) {
             getLoggedInUser(token).then((user) => {
