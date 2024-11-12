@@ -14,7 +14,7 @@ if (!inDev) {
         clientId={clientId}
         domain={domain}
         logoutUri={window.location.origin}
-        redirectUri={window.location.origin}
+        redirectUri={window.location.origin + '/home'}
       >
         <App />
       </KindeProvider>
